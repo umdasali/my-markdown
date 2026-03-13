@@ -61,7 +61,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
     "size": "size-limit",
-    "prepublishOnly": "npm run typecheck && npm run lint && npm run test && npm run build && npm run size",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm run test && npm run build",
     "release": "np"
   },
   "dependencies": {

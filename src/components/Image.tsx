@@ -12,7 +12,6 @@ function ImageComponent({ src = '', alt, title, width, height, className }: Imag
   const lazyLoad = imgOptions.lazyLoad !== false
 
   const imgElement = (
-    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={error ? '' : src}
       alt={resolvedAlt}

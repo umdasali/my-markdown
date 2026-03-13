@@ -1,4 +1,4 @@
-import type { MarkdownOptions, SerializedMarkdown, TOCItem } from '../core/types'
+import type { MarkdownOptions, SerializedMarkdown } from '../core/types'
 import { buildProcessor } from '../core/parser'
 
 /**
@@ -22,8 +22,8 @@ export async function serializeMarkdown(
   const file = await processor.process(content)
 
   return {
-    ast: file.result as unknown,
+    ast: file.result,
     frontmatter: frontmatter && Object.keys(frontmatter).length > 0 ? frontmatter : null,
-    toc: toc as TOCItem[],
+    toc,
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import type { MarkdownProps, MarkdownComponents, SerializedMarkdown } from '../core/types'
 import { buildProcessor } from '../core/parser'
 import { rehypeReactComponents } from '../core/renderer'

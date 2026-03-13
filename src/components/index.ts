@@ -30,6 +30,6 @@ export const DEFAULT_COMPONENTS: MarkdownComponents = {
   img: Image,
   table: Table,
   li: TaskListItem,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
   pre: CodeBlock as any,
 }

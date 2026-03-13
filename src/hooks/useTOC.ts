@@ -13,6 +13,8 @@ export function useTOC(items: TOCItem[], observe = true): UseTOCReturn {
   const [activeId, setActiveId] = useState<string | null>(null)
 
   const flatIds = flattenTOC(items).map((i) => i.id)
+  // Stable string dep — avoids re-running the effect on every render
+  const flatIdsKey = flatIds.join(',')
 
   useEffect(() => {
     if (!observe || flatIds.length === 0) return
@@ -44,8 +46,7 @@ export function useTOC(items: TOCItem[], observe = true): UseTOCReturn {
     headingElements.forEach((el) => observer.observe(el))
 
     return () => observer.disconnect()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [flatIds.join(','), observe])
+  }, [flatIdsKey, observe]) // stable string dep instead of array reference
 
   const scrollToHeading = useCallback((id: string) => {
     const el = document.getElementById(id)

@@ -1,4 +1,5 @@
 import { memo, useEffect, useState } from 'react'
+import type { Highlighter } from 'shiki'
 import { clsx } from 'clsx'
 import type { PreProps } from '../core/types'
 import { useMarkdownContext } from '../core/context'
@@ -98,7 +99,7 @@ export const CodeBlock = memo(CodeBlockComponent)
 // Shiki singleton
 // ---------------------------------------------------------------------------
 
-let highlighterPromise: Promise<import('shiki').Highlighter> | null = null
+let highlighterPromise: Promise<Highlighter> | null = null
 
 function getHighlighter() {
   if (!highlighterPromise) {
@@ -130,6 +131,7 @@ function extractText(children: React.ReactNode): string {
   if (typeof children === 'number') return String(children)
   if (Array.isArray(children)) return children.map(extractText).join('')
   if (children && typeof children === 'object' && 'props' in (children as object)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return extractText((children as React.ReactElement).props.children as React.ReactNode)
   }
   return ''

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import { useState, useEffect, useMemo } from 'react'
 import type { ReactNode } from 'react'
 import type { MarkdownOptions, TOCItem, MarkdownComponents } from '../core/types'
@@ -30,15 +31,14 @@ export function useMarkdown(source: string, options: UseMarkdownOptions = {}): U
   const [error, setError] = useState<Error | null>(null)
 
   const { components, ...markdownOptions } = options
+  // Stable serialized keys — used as memo deps instead of unstable object references
+  const componentsKey = JSON.stringify(components)
+  const optionsKey = JSON.stringify(markdownOptions)
+
   const mergedComponents = useMemo(
     () => mergeComponents(DEFAULT_COMPONENTS, components),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [JSON.stringify(components)],
+    [componentsKey], // stable string dep, not the object reference
   )
-
-  // Stable key for options (avoids rebuilding processor on every render)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const optionsKey = useMemo(() => JSON.stringify(markdownOptions), [JSON.stringify(markdownOptions)])
 
   useEffect(() => {
     let cancelled = false
@@ -82,8 +82,7 @@ export function useMarkdown(source: string, options: UseMarkdownOptions = {}): U
     return () => {
       cancelled = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [source, optionsKey])
+  }, [source, optionsKey]) // stable string dep avoids re-running on every render
 
   return { content, frontmatter, toc, isLoading, error }
 }

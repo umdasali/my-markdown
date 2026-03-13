@@ -7,7 +7,7 @@ function extractHeadingText(nodes: PhrasingContent[]): string {
   return nodes
     .map((node) => {
       if (node.type === 'text') return node.value
-      if ('children' in node) return extractHeadingText(node.children as PhrasingContent[])
+      if ('children' in node) return extractHeadingText(node.children)
       return ''
     })
     .join('')
@@ -29,7 +29,7 @@ export function extractTOC(tree: Root, maxDepth: number = 3): TOCItem[] {
     flatItems.push({
       id,
       text,
-      level: node.depth as TOCItem['level'],
+      level: node.depth,
       children: [],
     })
   })

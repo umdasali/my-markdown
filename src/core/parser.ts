@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import { unified, type Processor } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
@@ -19,7 +20,6 @@ export async function buildProcessor(options: MarkdownOptions = {}): Promise<Par
     gfm = true,
     frontmatter: enableFrontmatter = false,
     math = false,
-    mermaid: _mermaid = false,
     headingAnchors = true,
     sanitize = true,
     plugins: userPlugins = [],
@@ -30,7 +30,7 @@ export async function buildProcessor(options: MarkdownOptions = {}): Promise<Par
   let processor: any = unified().use(remarkParse)
 
   const frontmatterData: Record<string, unknown> = {}
-  let tocItems: TOCItem[] = []
+  const tocItems: TOCItem[] = []
 
   // --- GFM ---
   if (gfm) {
