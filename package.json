@@ -1,0 +1,133 @@
+{
+  "name": "@mdkit/react",
+  "version": "0.1.0",
+  "description": "A feature-rich Markdown renderer for React and Next.js",
+  "author": "",
+  "license": "MIT",
+  "keywords": [
+    "markdown",
+    "react",
+    "nextjs",
+    "renderer",
+    "syntax-highlighting",
+    "mdx",
+    "gfm",
+    "katex",
+    "mermaid"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "import": "./dist/server/index.js"
+    },
+    "./toc": {
+      "types": "./dist/toc/index.d.ts",
+      "import": "./dist/toc/index.js",
+      "require": "./dist/toc/index.cjs"
+    },
+    "./themes": {
+      "types": "./dist/themes/index.d.ts",
+      "import": "./dist/themes/index.js",
+      "require": "./dist/themes/index.cjs"
+    },
+    "./styles/base.css": "./dist/styles/base.css",
+    "./styles/light.css": "./dist/styles/themes/light.css",
+    "./styles/dark.css": "./dist/styles/themes/dark.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "size": "size-limit",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm run test && npm run build && npm run size",
+    "release": "np"
+  },
+  "dependencies": {
+    "clsx": "^2.1.0",
+    "hast-util-to-jsx-runtime": "^2.3.0",
+    "js-yaml": "^4.1.0",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-katex": "^7.0.0",
+    "rehype-react": "^8.0.0",
+    "rehype-sanitize": "^6.0.0",
+    "rehype-slug": "^6.0.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-math": "^6.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.1",
+    "shiki": "^1.0.0",
+    "unified": "^11.0.5"
+  },
+  "peerDependencies": {
+    "katex": "^0.16.0",
+    "mermaid": "^11.0.0",
+    "next": ">=13.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    },
+    "katex": {
+      "optional": true
+    },
+    "mermaid": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "eslint": "^8.57.0",
+    "jsdom": "^24.0.0",
+    "katex": "^0.16.0",
+    "mermaid": "^11.0.0",
+    "next": "^14.2.0",
+    "np": "^10.0.0",
+    "prettier": "^3.3.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "size-limit": "^11.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  },
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "30 KB"
+    }
+  ]
+}

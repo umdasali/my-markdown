@@ -1,0 +1,5 @@
+export { TOC } from './TOC'
+export type { TOCProps } from './TOC'
+export { TOCItemComponent } from './TOCItem'
+export type { TOCItemProps } from './TOCItem'
+export { extractTOC } from './extractor'

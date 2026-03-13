@@ -1,0 +1,21 @@
+/* @mdkit/react — Explicit Light Theme
+   Import when you need to force light mode:
+   import '@mdkit/react/styles/light.css'
+*/
+
+.mdkit-light {
+  --mdkit-text: #1a1a1a;
+  --mdkit-text-muted: #6b7280;
+  --mdkit-bg: #ffffff;
+  --mdkit-bg-secondary: #f9fafb;
+  --mdkit-border: #e5e7eb;
+  --mdkit-link: #2563eb;
+  --mdkit-link-hover: #1d4ed8;
+  --mdkit-code-bg: #f3f4f6;
+  --mdkit-code-text: #1f2937;
+  --mdkit-blockquote-border: #d1d5db;
+  --mdkit-blockquote-bg: #f9fafb;
+  --mdkit-table-header-bg: #f3f4f6;
+  --mdkit-table-row-hover: #f9fafb;
+  --mdkit-heading-anchor: #9ca3af;
+}

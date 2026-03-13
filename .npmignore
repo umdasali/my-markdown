@@ -1,0 +1,12 @@
+src/
+tests/
+examples/
+docs/
+scripts/
+*.config.ts
+*.config.js
+.eslintrc.json
+.prettierrc
+.github/
+tsconfig*.json
+vitest.config.*
