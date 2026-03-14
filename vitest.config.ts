@@ -26,10 +26,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@mdkit/react': '/src/index.ts',
-      '@mdkit/react/server': '/src/server/index.ts',
-      '@mdkit/react/toc': '/src/toc/index.ts',
-      '@mdkit/react/themes': '/src/themes/index.ts',
+      'react-markdown-ziri': '/src/index.ts',
+      'react-markdown-ziri/server': '/src/server/index.ts',
+      'react-markdown-ziri/toc': '/src/toc/index.ts',
+      'react-markdown-ziri/themes': '/src/themes/index.ts',
     },
   },
 })

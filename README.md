@@ -1,4 +1,4 @@
-# @mdkit/react
+# react-markdown-ziri
 
 A feature-rich, production-ready Markdown renderer for React and Next.js — built on the [unified](https://unifiedjs.com/) ecosystem.
 
@@ -18,11 +18,11 @@ A feature-rich, production-ready Markdown renderer for React and Next.js — bui
 ## Installation
 
 ```bash
-npm install @mdkit/react
+npm install react-markdown-ziri
 # or
-yarn add @mdkit/react
+yarn add react-markdown-ziri
 # or
-pnpm add @mdkit/react
+pnpm add react-markdown-ziri
 ```
 
 ### Optional peer dependencies
@@ -40,8 +40,8 @@ npm install mermaid
 ## Quick Start
 
 ```tsx
-import { Markdown } from '@mdkit/react'
-import '@mdkit/react/styles/base.css'
+import { Markdown } from 'react-markdown-ziri'
+import 'react-markdown-ziri/styles/base.css'
 
 export default function App() {
   return (
@@ -68,7 +68,7 @@ const greet = (name: string) => \`Hello, \${name}!\`
 The main client-side component.
 
 ```tsx
-import { Markdown } from '@mdkit/react'
+import { Markdown } from 'react-markdown-ziri'
 
 <Markdown
   options={{ gfm: true, highlight: true }}
@@ -177,7 +177,7 @@ All options are optional. Pass via the `options` prop.
 Use the pipeline directly without the `<Markdown>` component.
 
 ```tsx
-import { useMarkdown } from '@mdkit/react'
+import { useMarkdown } from 'react-markdown-ziri'
 
 function MyComponent({ source }: { source: string }) {
   const { content, frontmatter, toc, isLoading, error } = useMarkdown(source, {
@@ -209,10 +209,10 @@ function MyComponent({ source }: { source: string }) {
 The `<TOC>` component renders an auto-generated, scrollspy-enabled table of contents.
 
 ```tsx
-import { Markdown } from '@mdkit/react'
-import { TOC } from '@mdkit/react/toc'
+import { Markdown } from 'react-markdown-ziri'
+import { TOC } from 'react-markdown-ziri/toc'
 import { useState } from 'react'
-import type { TOCItem } from '@mdkit/react'
+import type { TOCItem } from 'react-markdown-ziri'
 
 function Page({ source }: { source: string }) {
   const [toc, setToc] = useState<TOCItem[]>([])
@@ -262,7 +262,7 @@ interface TOCItem {
 ### Built-in themes
 
 ```tsx
-import { Markdown } from '@mdkit/react'
+import { Markdown } from 'react-markdown-ziri'
 
 <Markdown theme="github">
   {source}
@@ -274,7 +274,7 @@ Available theme names: `"light"` | `"dark"` | `"github"` | `"dracula"`
 ### Custom theme
 
 ```tsx
-import type { ThemeConfig } from '@mdkit/react'
+import type { ThemeConfig } from 'react-markdown-ziri'
 
 const myTheme: ThemeConfig = {
   name: 'my-theme',
@@ -311,9 +311,9 @@ All theme values are exposed as CSS custom properties. You can override them glo
 Import pre-built theme stylesheets:
 
 ```ts
-import '@mdkit/react/styles/base.css'    // required base styles
-import '@mdkit/react/styles/light.css'   // light theme variables
-import '@mdkit/react/styles/dark.css'    // dark theme variables
+import 'react-markdown-ziri/styles/base.css'    // required base styles
+import 'react-markdown-ziri/styles/light.css'   // light theme variables
+import 'react-markdown-ziri/styles/dark.css'    // dark theme variables
 ```
 
 ---
@@ -323,8 +323,8 @@ import '@mdkit/react/styles/dark.css'    // dark theme variables
 Replace any default rendered element with your own React component.
 
 ```tsx
-import { Markdown } from '@mdkit/react'
-import type { MarkdownComponents, HeadingProps, LinkProps } from '@mdkit/react'
+import { Markdown } from 'react-markdown-ziri'
+import type { MarkdownComponents, HeadingProps, LinkProps } from 'react-markdown-ziri'
 
 const components: Partial<MarkdownComponents> = {
   // Custom heading with your design system
@@ -364,8 +364,8 @@ Use `MarkdownServer` for zero client-side JavaScript. It renders markdown entire
 
 ```tsx
 // app/blog/[slug]/page.tsx
-import { MarkdownServer } from '@mdkit/react/server'
-import '@mdkit/react/styles/base.css'
+import { MarkdownServer } from 'react-markdown-ziri/server'
+import 'react-markdown-ziri/styles/base.css'
 
 export default async function BlogPost({ params }: { params: { slug: string } }) {
   const source = await fetchMarkdown(params.slug)
@@ -386,7 +386,7 @@ Pre-process markdown at build time and pass the result to a client component.
 
 ```tsx
 // For Next.js Pages Router or any SSG scenario
-import { serializeMarkdown } from '@mdkit/react/server'
+import { serializeMarkdown } from 'react-markdown-ziri/server'
 
 export async function getStaticProps() {
   const source = await fs.readFile('content/post.md', 'utf8')
@@ -401,7 +401,7 @@ export async function getStaticProps() {
 ## Frontmatter
 
 ```tsx
-import { Markdown } from '@mdkit/react'
+import { Markdown } from 'react-markdown-ziri'
 import { useState } from 'react'
 
 function BlogPost({ source }: { source: string }) {
@@ -481,7 +481,7 @@ Extend the pipeline with your own remark or rehype plugins.
 ```tsx
 import remarkGemoji from 'remark-gemoji'
 import rehypeExternalLinks from 'rehype-external-links'
-import { createPlugin } from '@mdkit/react'
+import { createPlugin } from 'react-markdown-ziri'
 
 const plugins = [
   createPlugin('remark', remarkGemoji),
@@ -548,7 +548,7 @@ import type {
   ImageProps,
   CodeBlockProps,
   MarkdownPlugin,
-} from '@mdkit/react'
+} from 'react-markdown-ziri'
 ```
 
 ---
@@ -557,16 +557,16 @@ import type {
 
 ### App Router (`app/`)
 
-No special setup needed — just import and use. For server-side rendering use `MarkdownServer` from `@mdkit/react/server`.
+No special setup needed — just import and use. For server-side rendering use `MarkdownServer` from `react-markdown-ziri/server`.
 
 ### Pages Router (`pages/`)
 
-Add `@mdkit/react` to `next.config.js` transpile list if needed (for ESM packages):
+Add `react-markdown-ziri` to `next.config.js` transpile list if needed (for ESM packages):
 
 ```js
 // next.config.js
 module.exports = {
-  transpilePackages: ['@mdkit/react'],
+  transpilePackages: ['react-markdown-ziri'],
 }
 ```
 
@@ -576,10 +576,10 @@ module.exports = {
 
 | Entry | Size (minified + gzip) |
 |-------|------------------------|
-| `@mdkit/react` | ~28 KB |
-| `@mdkit/react/toc` | ~11 KB |
-| `@mdkit/react/themes` | ~3 KB |
-| `@mdkit/react/server` | ~31 KB |
+| `react-markdown-ziri` | ~28 KB |
+| `react-markdown-ziri/toc` | ~11 KB |
+| `react-markdown-ziri/themes` | ~3 KB |
+| `react-markdown-ziri/server` | ~31 KB |
 
 Shiki, KaTeX, and Mermaid are loaded dynamically — they do not contribute to your initial bundle.
 

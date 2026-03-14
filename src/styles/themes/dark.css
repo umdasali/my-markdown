@@ -1,6 +1,6 @@
-/* @mdkit/react — Dark Theme
+/* react-markdown-ziri — Dark Theme
    Import this file to enable dark mode:
-   import '@mdkit/react/styles/dark.css'
+   import 'react-markdown-ziri/styles/dark.css'
 
    Then add class="mdkit-dark" to your root element,
    or use prefers-color-scheme media query.
