@@ -68,32 +68,73 @@ describe('<Markdown>', () => {
     expect(article).toBeDefined()
   })
 
-  it('applies mdkit-dark class when theme="dark"', async () => {
+  it('applies dark theme CSS variables inline when theme="dark"', async () => {
     const { container } = render(<Markdown theme="dark">{'# Dark'}</Markdown>)
-    const article = container.querySelector('article')
-    expect(article?.classList.contains('mdkit-dark')).toBe(true)
-    expect(article?.classList.contains('mdkit-light')).toBe(false)
+    const article = container.querySelector('article') as HTMLElement
+    expect(article.style.getPropertyValue('--mdkit-bg')).toBe('#111827')
+    expect(article.style.getPropertyValue('--mdkit-text')).toBe('#f3f4f6')
   })
 
-  it('applies mdkit-light class when theme="light"', async () => {
+  it('applies light theme CSS variables inline when theme="light"', async () => {
     const { container } = render(<Markdown theme="light">{'# Light'}</Markdown>)
-    const article = container.querySelector('article')
-    expect(article?.classList.contains('mdkit-light')).toBe(true)
-    expect(article?.classList.contains('mdkit-dark')).toBe(false)
+    const article = container.querySelector('article') as HTMLElement
+    expect(article.style.getPropertyValue('--mdkit-bg')).toBe('#ffffff')
+    expect(article.style.getPropertyValue('--mdkit-text')).toBe('#1a1a1a')
   })
 
-  it('applies no theme class when theme="system"', async () => {
+  it('applies github theme CSS variables inline when theme="github"', async () => {
+    const { container } = render(<Markdown theme="github">{'# GitHub'}</Markdown>)
+    const article = container.querySelector('article') as HTMLElement
+    expect(article.style.getPropertyValue('--mdkit-bg')).toBe('#ffffff')
+    expect(article.style.getPropertyValue('--mdkit-text')).toBe('#24292e')
+    expect(article.style.getPropertyValue('--mdkit-link')).toBe('#0366d6')
+  })
+
+  it('applies dracula theme CSS variables inline when theme="dracula"', async () => {
+    const { container } = render(<Markdown theme="dracula">{'# Dracula'}</Markdown>)
+    const article = container.querySelector('article') as HTMLElement
+    expect(article.style.getPropertyValue('--mdkit-bg')).toBe('#282a36')
+    expect(article.style.getPropertyValue('--mdkit-text')).toBe('#f8f8f2')
+  })
+
+  it('applies custom ThemeConfig inline when theme is an object', async () => {
+    const myTheme = {
+      name: 'custom',
+      colors: {
+        text: '#ff0000',
+        textMuted: '#aaaaaa',
+        background: '#0000ff',
+        backgroundSecondary: '#000088',
+        border: '#333333',
+        link: '#00ff00',
+        linkHover: '#00cc00',
+        codeBackground: '#111111',
+        codeText: '#ffffff',
+        blockquoteBorder: '#444444',
+        blockquoteBackground: '#222222',
+        tableHeaderBackground: '#333333',
+        tableRowHover: '#444444',
+        headingAnchor: '#555555',
+      },
+    }
+    const { container } = render(<Markdown theme={myTheme}>{'# Custom'}</Markdown>)
+    const article = container.querySelector('article') as HTMLElement
+    expect(article.style.getPropertyValue('--mdkit-text')).toBe('#ff0000')
+    expect(article.style.getPropertyValue('--mdkit-bg')).toBe('#0000ff')
+  })
+
+  it('applies no inline theme vars when theme="system" (CSS media query handles it)', async () => {
     const { container } = render(<Markdown theme="system">{'# System'}</Markdown>)
-    const article = container.querySelector('article')
-    expect(article?.classList.contains('mdkit-dark')).toBe(false)
-    expect(article?.classList.contains('mdkit-light')).toBe(false)
+    const article = container.querySelector('article') as HTMLElement
+    expect(article.style.getPropertyValue('--mdkit-bg')).toBe('')
+    expect(article.style.getPropertyValue('--mdkit-text')).toBe('')
   })
 
-  it('defaults to no theme class (system) when theme prop is omitted', async () => {
+  it('applies no inline theme vars when theme prop is omitted', async () => {
     const { container } = render(<Markdown>{'# Default'}</Markdown>)
-    const article = container.querySelector('article')
-    expect(article?.classList.contains('mdkit-dark')).toBe(false)
-    expect(article?.classList.contains('mdkit-light')).toBe(false)
+    const article = container.querySelector('article') as HTMLElement
+    expect(article.style.getPropertyValue('--mdkit-bg')).toBe('')
+    expect(article.style.getPropertyValue('--mdkit-text')).toBe('')
   })
 
   it('renders GFM task list', async () => {

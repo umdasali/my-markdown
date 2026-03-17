@@ -22,6 +22,23 @@ export function getTheme(name: ThemeName | ThemeConfig): ThemeConfig {
   return THEMES[name] ?? lightTheme
 }
 
+const COLOR_TO_CSS_VAR: Record<string, string> = {
+  text: '--mdkit-text',
+  textMuted: '--mdkit-text-muted',
+  background: '--mdkit-bg',
+  backgroundSecondary: '--mdkit-bg-secondary',
+  border: '--mdkit-border',
+  link: '--mdkit-link',
+  linkHover: '--mdkit-link-hover',
+  codeBackground: '--mdkit-code-bg',
+  codeText: '--mdkit-code-text',
+  blockquoteBorder: '--mdkit-blockquote-border',
+  blockquoteBackground: '--mdkit-blockquote-bg',
+  tableHeaderBackground: '--mdkit-table-header-bg',
+  tableRowHover: '--mdkit-table-row-hover',
+  headingAnchor: '--mdkit-heading-anchor',
+}
+
 /**
  * Convert a ThemeConfig to CSS custom properties string.
  * Useful for injecting themes via <style> tags.
@@ -29,12 +46,11 @@ export function getTheme(name: ThemeName | ThemeConfig): ThemeConfig {
 export function themeToCSS(theme: ThemeConfig, selector = ':root'): string {
   const { colors } = theme
   const vars = Object.entries(colors)
-    .map(([key, value]) => `  --mdkit-${camelToKebab(key)}: ${value};`)
+    .map(([key, value]) => {
+      const cssVar = COLOR_TO_CSS_VAR[key] ?? `--mdkit-${key}`
+      return `  ${cssVar}: ${value};`
+    })
     .join('\n')
 
   return `${selector} {\n${vars}\n}`
-}
-
-function camelToKebab(str: string): string {
-  return str.replace(/([A-Z])/g, (m) => `-${m.toLowerCase()}`)
 }
