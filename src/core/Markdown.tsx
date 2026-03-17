@@ -29,9 +29,10 @@ const COLOR_TO_CSS_VAR: Record<keyof ThemeColors, string> = {
 
 function themeToInlineStyle(config: ThemeConfig): Record<string, string> {
   const vars: Record<string, string> = {}
-  for (const [key, value] of Object.entries(config.colors)) {
+  const colors = config.colors as unknown as Record<string, string>
+  for (const key of Object.keys(colors)) {
     const cssVar = COLOR_TO_CSS_VAR[key as keyof ThemeColors]
-    if (cssVar) vars[cssVar] = value
+    if (cssVar) vars[cssVar] = colors[key] ?? ''
   }
   return vars
 }
