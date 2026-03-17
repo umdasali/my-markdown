@@ -15,7 +15,7 @@ const DEFAULT_OPTIONS: MarkdownContextValue['options'] = {
 const DEFAULT_CONTEXT: MarkdownContextValue = {
   options: DEFAULT_OPTIONS,
   components: DEFAULT_COMPONENTS,
-  theme: 'system',
+  theme: 'light',
 }
 
 export const MarkdownContext = createContext<MarkdownContextValue>(DEFAULT_CONTEXT)
@@ -32,7 +32,7 @@ export function MarkdownProvider({
   children,
   options = {},
   components,
-  theme = 'system',
+  theme = 'light',
   pluginComponents,
 }: MarkdownProviderProps) {
   const {

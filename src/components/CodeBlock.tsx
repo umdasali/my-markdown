@@ -5,6 +5,7 @@ import type { PreProps } from '../core/types'
 import { useMarkdownContext } from '../core/context'
 import { CopyButton } from './CopyButton'
 import { detectLanguage } from '../utils/detect-language'
+import { getTheme } from '../themes'
 
 interface CodeBlockProps extends PreProps {
   'data-language'?: string
@@ -13,7 +14,7 @@ interface CodeBlockProps extends PreProps {
 }
 
 function CodeBlockComponent({ children, className, 'data-language': lang, 'data-raw': rawCode, ...rest }: CodeBlockProps) {
-  const { options } = useMarkdownContext()
+  const { options, theme: markdownTheme } = useMarkdownContext()
   const highlightOptions = typeof options.highlight === 'object' ? options.highlight : {}
   const showCopyButton = options.highlight !== false && (highlightOptions.showCopyButton !== false)
   const showLangLabel = highlightOptions.showLanguageLabel !== false
@@ -32,7 +33,8 @@ function CodeBlockComponent({ children, className, 'data-language': lang, 'data-
 
     let cancelled = false
 
-    const theme = highlightOptions.theme ?? 'github-dark'
+    const resolvedCode = getTheme(markdownTheme).code ?? 'github-light'
+    const theme = highlightOptions.theme ?? resolvedCode
     const lightTheme = highlightOptions.themes?.light ?? 'github-light'
     const darkTheme = highlightOptions.themes?.dark ?? 'github-dark'
     const hasDualTheme = !!highlightOptions.themes
@@ -57,7 +59,7 @@ function CodeBlockComponent({ children, className, 'data-language': lang, 'data-
     return () => {
       cancelled = true
     }
-  }, [codeText, language, options.highlight, highlightOptions.theme, highlightOptions.themes])
+  }, [codeText, language, markdownTheme, options.highlight, highlightOptions.theme, highlightOptions.themes])
 
   return (
     <div
