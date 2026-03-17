@@ -27,7 +27,7 @@ export const lightGreenTheme: ThemeConfig = {
   colors: {
     text: '#14532d',
     textMuted: '#4b7a5a',
-    background: '#f0fdf4',
+    background: '#ffffff',
     backgroundSecondary: '#dcfce7',
     border: '#bbf7d0',
     link: '#16a34a',
@@ -48,7 +48,7 @@ export const lightOrangeTheme: ThemeConfig = {
   colors: {
     text: '#7c2d12',
     textMuted: '#a07040',
-    background: '#fff7ed',
+    background: '#ffffff',
     backgroundSecondary: '#ffedd5',
     border: '#fed7aa',
     link: '#ea580c',
@@ -69,7 +69,7 @@ export const lightPinkTheme: ThemeConfig = {
   colors: {
     text: '#881337',
     textMuted: '#9d4f72',
-    background: '#fff1f2',
+    background: '#ffffff',
     backgroundSecondary: '#ffe4e6',
     border: '#fecdd3',
     link: '#e11d48',
@@ -90,7 +90,7 @@ export const lightPurpleTheme: ThemeConfig = {
   colors: {
     text: '#3b0764',
     textMuted: '#7e5baa',
-    background: '#faf5ff',
+    background: '#ffffff',
     backgroundSecondary: '#f3e8ff',
     border: '#e9d5ff',
     link: '#9333ea',
@@ -111,7 +111,7 @@ export const darkTheme: ThemeConfig = {
   colors: {
     text: '#d4d4d4',
     textMuted: '#858585',
-    background: '#1e1e1e',
+    background: '#262626',
     backgroundSecondary: '#252526',
     border: '#3e3e42',
     link: '#4ec9b0',
@@ -132,7 +132,7 @@ export const darkGreenTheme: ThemeConfig = {
   colors: {
     text: '#e2f2e2',
     textMuted: '#6a9f6a',
-    background: '#0d1a0d',
+    background: '#262626',
     backgroundSecondary: '#132013',
     border: '#1e3a1e',
     link: '#4ade80',
@@ -153,7 +153,7 @@ export const darkOrangeTheme: ThemeConfig = {
   colors: {
     text: '#fef0d8',
     textMuted: '#b07840',
-    background: '#1a0e00',
+    background: '#262626',
     backgroundSecondary: '#251500',
     border: '#3d2200',
     link: '#fb923c',
@@ -174,7 +174,7 @@ export const darkPinkTheme: ThemeConfig = {
   colors: {
     text: '#fce7f3',
     textMuted: '#a05070',
-    background: '#1a0d14',
+    background: '#262626',
     backgroundSecondary: '#22101b',
     border: '#4a1a30',
     link: '#f472b6',
@@ -195,7 +195,7 @@ export const darkPurpleTheme: ThemeConfig = {
   colors: {
     text: '#ede9f8',
     textMuted: '#8b7fc4',
-    background: '#0f0d1a',
+    background: '#262626',
     backgroundSecondary: '#161228',
     border: '#2e2652',
     link: '#a78bfa',
@@ -237,7 +237,7 @@ export const draculaTheme: ThemeConfig = {
   colors: {
     text: '#f8f8f2',
     textMuted: '#6272a4',
-    background: '#282a36',
+    background: '#262626',
     backgroundSecondary: '#21222c',
     border: '#44475a',
     link: '#8be9fd',
