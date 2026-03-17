@@ -68,6 +68,34 @@ describe('<Markdown>', () => {
     expect(article).toBeDefined()
   })
 
+  it('applies mdkit-dark class when theme="dark"', async () => {
+    const { container } = render(<Markdown theme="dark">{'# Dark'}</Markdown>)
+    const article = container.querySelector('article')
+    expect(article?.classList.contains('mdkit-dark')).toBe(true)
+    expect(article?.classList.contains('mdkit-light')).toBe(false)
+  })
+
+  it('applies mdkit-light class when theme="light"', async () => {
+    const { container } = render(<Markdown theme="light">{'# Light'}</Markdown>)
+    const article = container.querySelector('article')
+    expect(article?.classList.contains('mdkit-light')).toBe(true)
+    expect(article?.classList.contains('mdkit-dark')).toBe(false)
+  })
+
+  it('applies no theme class when theme="system"', async () => {
+    const { container } = render(<Markdown theme="system">{'# System'}</Markdown>)
+    const article = container.querySelector('article')
+    expect(article?.classList.contains('mdkit-dark')).toBe(false)
+    expect(article?.classList.contains('mdkit-light')).toBe(false)
+  })
+
+  it('defaults to no theme class (system) when theme prop is omitted', async () => {
+    const { container } = render(<Markdown>{'# Default'}</Markdown>)
+    const article = container.querySelector('article')
+    expect(article?.classList.contains('mdkit-dark')).toBe(false)
+    expect(article?.classList.contains('mdkit-light')).toBe(false)
+  })
+
   it('renders GFM task list', async () => {
     render(<Markdown>{'- [x] Done\n- [ ] Todo'}</Markdown>)
     await waitFor(() => {

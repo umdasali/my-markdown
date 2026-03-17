@@ -17,7 +17,7 @@ function MarkdownInner({
   onFrontmatter,
   onTOC,
 }: MarkdownProps) {
-  const { options, components: contextComponents } = useMarkdownContext()
+  const { options, components: contextComponents, theme } = useMarkdownContext()
 
   const { content, frontmatter, toc, isLoading } = useMarkdown(children, {
     ...options,
@@ -35,7 +35,7 @@ function MarkdownInner({
   return (
     <article
       id={id}
-      className={clsx('mdkit-root', className)}
+      className={clsx('mdkit-root', theme === 'dark' && 'mdkit-dark', theme === 'light' && 'mdkit-light', className)}
       style={style}
       role="article"
       aria-label={ariaLabel ?? 'Markdown content'}
