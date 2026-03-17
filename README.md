@@ -4,12 +4,12 @@ A feature-rich, production-ready Markdown renderer for React and Next.js — bui
 
 - **Zero config** — works out of the box with sensible defaults
 - **GFM support** — tables, task lists, strikethrough, autolinks
-- **Syntax highlighting** — powered by [Shiki](https://shiki.matsu.io/) (server-side, zero client runtime)
-- **Math** — KaTeX rendering for inline and block math
+- **Syntax highlighting** — powered by [Shiki](https://shiki.matsu.io/) with automatic language detection
+- **Math** — KaTeX rendering for inline and block expressions
 - **Diagrams** — Mermaid diagram support
-- **Table of Contents** — auto-generated with active-item tracking
+- **Table of Contents** — auto-generated with scrollspy active-item tracking
 - **Frontmatter** — YAML frontmatter extraction
-- **Themes** — built-in light/dark/github/dracula themes with CSS custom properties
+- **Themes** — built-in `light` / `dark` / `github` / `dracula` + custom theme support via CSS custom properties
 - **React Server Components** — async `MarkdownServer` for Next.js App Router
 - **Fully typed** — strict TypeScript throughout
 
@@ -28,10 +28,10 @@ pnpm add react-markdown-ziri
 ### Optional peer dependencies
 
 ```bash
-# Math rendering
+# Math rendering (required for options.math)
 npm install katex
 
-# Diagram rendering
+# Diagram rendering (required for options.mermaid)
 npm install mermaid
 ```
 
@@ -65,12 +65,13 @@ const greet = (name: string) => \`Hello, \${name}!\`
 
 ### `<Markdown>`
 
-The main client-side component.
+The main client-side component. Renders markdown on the client using React hooks.
 
 ```tsx
 import { Markdown } from 'react-markdown-ziri'
 
 <Markdown
+  theme="light"
   options={{ gfm: true, highlight: true }}
   className="my-prose"
   onFrontmatter={(data) => console.log(data)}
@@ -86,14 +87,14 @@ import { Markdown } from 'react-markdown-ziri'
 |------|------|---------|-------------|
 | `children` | `string` | — | Markdown source string |
 | `options` | `MarkdownOptions` | `{}` | Parsing and rendering options |
-| `components` | `Partial<MarkdownComponents>` | — | Override default components |
-| `theme` | `ThemeName \| ThemeConfig` | — | Color theme |
+| `components` | `Partial<MarkdownComponents>` | — | Override default rendered components |
+| `theme` | `ThemeName \| ThemeConfig` | `"light"` | Color theme |
 | `className` | `string` | — | CSS class on the `<article>` wrapper |
 | `style` | `CSSProperties` | — | Inline styles on the wrapper |
-| `id` | `string` | — | HTML id attribute |
+| `id` | `string` | — | HTML `id` attribute |
 | `aria-label` | `string` | `"Markdown content"` | ARIA label |
 | `onFrontmatter` | `(data: Record<string, unknown>) => void` | — | Called when frontmatter is parsed |
-| `onTOC` | `(items: TOCItem[]) => void` | — | Called when TOC is extracted |
+| `onTOC` | `(items: TOCItem[]) => void` | — | Called when the TOC is extracted |
 
 ---
 
@@ -111,6 +112,7 @@ All options are optional. Pass via the `options` prop.
   toc: true,
   headingAnchors: true,
   sanitize: true,
+  lineNumbers: true,
 }}>
   {source}
 </Markdown>
@@ -118,14 +120,14 @@ All options are optional. Pass via the `options` prop.
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `gfm` | `boolean` | `true` | GitHub Flavored Markdown (tables, task lists, etc.) |
+| `gfm` | `boolean` | `true` | GitHub Flavored Markdown (tables, task lists, strikethrough) |
 | `frontmatter` | `boolean` | `false` | Parse YAML frontmatter |
-| `highlight` | `boolean \| HighlightOptions` | `false` | Syntax highlighting via Shiki |
+| `highlight` | `boolean \| HighlightOptions` | `true` | Syntax highlighting via Shiki |
 | `math` | `boolean \| MathOptions` | `false` | Math rendering via KaTeX |
 | `mermaid` | `boolean \| MermaidOptions` | `false` | Mermaid diagram rendering |
 | `toc` | `boolean \| TOCOptions` | `false` | Extract table of contents |
-| `headingAnchors` | `boolean \| HeadingAnchorOptions` | `false` | Add anchor links to headings |
-| `sanitize` | `boolean \| SanitizeOptions` | `false` | Sanitize HTML (strip XSS) |
+| `headingAnchors` | `boolean \| HeadingAnchorOptions` | `true` | Add anchor links to headings |
+| `sanitize` | `boolean \| SanitizeOptions` | `true` | Sanitize HTML (strip XSS) |
 | `lineNumbers` | `boolean` | `false` | Show line numbers in code blocks |
 | `externalLinks` | `ExternalLinkOptions` | — | Control external link behavior |
 | `images` | `ImageOptions` | — | Image rendering options |
@@ -135,9 +137,24 @@ All options are optional. Pass via the `options` prop.
 
 ```ts
 {
-  theme?: string          // Shiki theme name (default: 'github-light')
-  darkTheme?: string      // Theme for dark mode (default: 'github-dark')
-  langs?: string[]        // Pre-load specific languages
+  theme?: string                    // Single Shiki theme name (auto-derived from the theme prop by default)
+  themes?: { light: string; dark: string }  // Dual themes (light/dark via CSS variables)
+  defaultLanguage?: string          // Fallback language when none is detected (default: 'text')
+  showCopyButton?: boolean          // Show copy-to-clipboard button (default: true)
+  showLanguageLabel?: boolean       // Show language badge in code header (default: true)
+}
+```
+
+When you pass `theme="dark"` (or any built-in theme) to `<Markdown>`, the code block automatically picks the matching Shiki theme (`github-dark` for dark, `github-light` for light/github, `dracula` for dracula). You only need `HighlightOptions.theme` to override this.
+
+#### `HeadingAnchorOptions`
+
+```ts
+{
+  icon?: ReactNode        // Custom anchor icon (default: '#' symbol)
+  className?: string      // CSS class on the anchor element
+  position?: 'before' | 'after'  // Anchor position relative to heading text (default: 'before')
+  ariaLabel?: string      // ARIA label on the anchor link
 }
 ```
 
@@ -145,18 +162,29 @@ All options are optional. Pass via the `options` prop.
 
 ```ts
 {
-  maxDepth?: number       // Maximum heading depth (default: 3)
-  minDepth?: number       // Minimum heading depth (default: 1)
+  maxDepth?: 1 | 2 | 3 | 4 | 5 | 6  // Deepest heading level to include (default: 6)
+  ordered?: boolean                   // Use <ol> instead of <ul>
+  title?: string                      // Optional heading above the TOC
 }
 ```
 
-#### `HeadingAnchorOptions`
+#### `MathOptions`
 
 ```ts
 {
-  position?: 'before' | 'after'   // Anchor position (default: 'before')
-  label?: string                   // Anchor link text (default: '#')
-  className?: string               // CSS class on the anchor
+  throwOnError?: boolean             // Throw on invalid LaTeX (default: false)
+  macros?: Record<string, string>    // Custom KaTeX macros
+  displayMode?: boolean              // Force display mode for all math
+}
+```
+
+#### `MermaidOptions`
+
+```ts
+{
+  theme?: 'default' | 'dark' | 'forest' | 'neutral' | 'base'
+  securityLevel?: 'strict' | 'loose' | 'antiscript'
+  fontFamily?: string
 }
 ```
 
@@ -164,49 +192,158 @@ All options are optional. Pass via the `options` prop.
 
 ```ts
 {
-  allowedTags?: string[]           // Tags to allow (adds to defaults)
-  allowedAttributes?: Record<string, string[]>  // Attributes to allow
-  stripComments?: boolean          // Strip HTML comments (default: true)
+  allowlist?: {
+    tagNames?: string[]                       // Additional allowed HTML tags
+    attributes?: Record<string, string[]>     // Additional allowed attributes per tag
+    protocols?: Record<string, string[]>      // Additional allowed URL protocols
+  }
+  allowMath?: boolean     // Allow KaTeX-generated elements (default: true when math is enabled)
+  allowMermaid?: boolean  // Allow Mermaid-generated elements (default: true when mermaid is enabled)
+}
+```
+
+#### `ExternalLinkOptions`
+
+```ts
+{
+  target?: '_blank' | '_self'   // Link target (default: '_blank')
+  rel?: string                  // rel attribute (default: 'noopener noreferrer')
+  icon?: ReactNode              // Icon appended to external link text
+  newTabAriaLabel?: string      // Screen reader label for new-tab links
 }
 ```
 
 ---
 
-### `useMarkdown` Hook
+### `<MarkdownProvider>`
 
-Use the pipeline directly without the `<Markdown>` component.
+Wrap multiple `<Markdown>` components to share options, components, and theme without repeating props.
 
 ```tsx
-import { useMarkdown } from 'react-markdown-ziri'
+import { MarkdownProvider, Markdown } from 'react-markdown-ziri'
 
-function MyComponent({ source }: { source: string }) {
-  const { content, frontmatter, toc, isLoading, error } = useMarkdown(source, {
-    gfm: true,
-    highlight: true,
-  })
+<MarkdownProvider
+  theme="dark"
+  options={{ gfm: true, highlight: true, headingAnchors: true }}
+>
+  <Markdown>{postOne}</Markdown>
+  <Markdown>{postTwo}</Markdown>
+</MarkdownProvider>
+```
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Error: {error.message}</div>
+---
 
-  return <article>{content}</article>
+## Themes
+
+### Built-in themes
+
+Pass a theme name to `<Markdown>` or `<MarkdownProvider>`:
+
+```tsx
+<Markdown theme="light">{source}</Markdown>    // default
+<Markdown theme="dark">{source}</Markdown>
+<Markdown theme="github">{source}</Markdown>
+<Markdown theme="dracula">{source}</Markdown>
+<Markdown theme="system">{source}</Markdown>   // follows OS preference via CSS media query
+```
+
+Each theme also sets the matching Shiki theme for code blocks automatically.
+
+### Custom theme
+
+```tsx
+import type { ThemeConfig } from 'react-markdown-ziri'
+
+const myTheme: ThemeConfig = {
+  name: 'catppuccin',
+  code: 'catppuccin-mocha',   // Shiki theme for code blocks
+  colors: {
+    text: '#cdd6f4',
+    textMuted: '#6c7086',
+    background: '#1e1e2e',
+    backgroundSecondary: '#181825',
+    border: '#313244',
+    link: '#89b4fa',
+    linkHover: '#b4d0fb',
+    codeBackground: '#181825',
+    codeText: '#cdd6f4',
+    blockquoteBorder: '#45475a',
+    blockquoteBackground: '#181825',
+    tableHeaderBackground: '#181825',
+    tableRowHover: '#313244',
+    headingAnchor: '#6c7086',
+  },
+}
+
+<Markdown theme={myTheme}>{source}</Markdown>
+```
+
+### CSS custom properties
+
+The theme is applied as inline CSS custom properties on the `<article>` element. Override any value globally or locally:
+
+```css
+/* Global override */
+:root {
+  --mdkit-text: #1a1a1a;
+  --mdkit-bg: #ffffff;
+  --mdkit-bg-secondary: #f9fafb;
+  --mdkit-border: #e5e7eb;
+  --mdkit-link: #2563eb;
+  --mdkit-link-hover: #1d4ed8;
+  --mdkit-code-bg: #f3f4f6;
+  --mdkit-code-text: #1f2937;
+  --mdkit-blockquote-border: #d1d5db;
+  --mdkit-blockquote-bg: #f9fafb;
+  --mdkit-table-header-bg: #f3f4f6;
+  --mdkit-table-row-hover: #f9fafb;
+  --mdkit-heading-anchor: #9ca3af;
+  --mdkit-text-muted: #6b7280;
+
+  /* Typography */
+  --mdkit-font-sans: system-ui, sans-serif;
+  --mdkit-font-mono: ui-monospace, monospace;
+  --mdkit-font-size: 1rem;
+  --mdkit-line-height: 1.75;
+  --mdkit-radius: 0.375rem;
 }
 ```
 
-#### Return value
+### Theme stylesheets
+
+```ts
+import 'react-markdown-ziri/styles/base.css'   // required — includes light theme variables + system dark mode
+import 'react-markdown-ziri/styles/dark.css'   // optional — explicit dark class + media query override
+import 'react-markdown-ziri/styles/light.css'  // optional — explicit light class override
+```
+
+### `useTheme` hook
+
+For toggling themes with persistence:
+
+```tsx
+import { useTheme } from 'react-markdown-ziri'
+
+function ThemeToggle() {
+  const { theme, preference, setTheme } = useTheme()
+
+  return (
+    <button onClick={() => setTheme(preference === 'dark' ? 'light' : 'dark')}>
+      Current: {theme}
+    </button>
+  )
+}
+```
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `content` | `ReactNode` | Rendered React nodes |
-| `frontmatter` | `Record<string, unknown> \| null` | Parsed frontmatter data |
-| `toc` | `TOCItem[]` | Table of contents |
-| `isLoading` | `boolean` | `true` while processing |
-| `error` | `Error \| null` | Processing error if any |
+| `theme` | `'light' \| 'dark'` | Resolved theme (after applying system preference) |
+| `preference` | `'light' \| 'dark' \| 'system'` | Stored preference |
+| `setTheme` | `(pref: ThemePreference) => void` | Update preference (persisted to `localStorage`) |
 
 ---
 
 ## Table of Contents
-
-The `<TOC>` component renders an auto-generated, scrollspy-enabled table of contents.
 
 ```tsx
 import { Markdown } from 'react-markdown-ziri'
@@ -238,13 +375,10 @@ function Page({ source }: { source: string }) {
 |------|------|---------|-------------|
 | `items` | `TOCItem[]` | — | TOC items (from `onTOC` callback) |
 | `title` | `string` | — | Optional heading above the list |
-| `maxDepth` | `number` | `3` | Maximum nesting depth to render |
+| `maxDepth` | `number` | `6` | Maximum nesting depth to render |
 | `ordered` | `boolean` | `false` | Use `<ol>` instead of `<ul>` |
-| `activeClassName` | `string` | `"mdkit-toc-item--active"` | Class on the active item |
-| `itemClassName` | `string` | — | Class on every item |
-| `onItemClick` | `(item: TOCItem) => void` | — | Click callback |
 
-#### `TOCItem` type
+#### `TOCItem`
 
 ```ts
 interface TOCItem {
@@ -257,64 +391,33 @@ interface TOCItem {
 
 ---
 
-## Themes
+## `useMarkdown` Hook
 
-### Built-in themes
-
-```tsx
-import { Markdown } from 'react-markdown-ziri'
-
-<Markdown theme="github">
-  {source}
-</Markdown>
-```
-
-Available theme names: `"light"` | `"dark"` | `"github"` | `"dracula"`
-
-### Custom theme
+Access the markdown pipeline directly without the `<Markdown>` component.
 
 ```tsx
-import type { ThemeConfig } from 'react-markdown-ziri'
+import { useMarkdown } from 'react-markdown-ziri'
 
-const myTheme: ThemeConfig = {
-  name: 'my-theme',
-  colors: {
-    background: '#1e1e2e',
-    foreground: '#cdd6f4',
-    primary: '#89b4fa',
-    // ...
-  },
-}
+function MyComponent({ source }: { source: string }) {
+  const { content, frontmatter, toc, isLoading, error } = useMarkdown(source, {
+    gfm: true,
+    highlight: true,
+  })
 
-<Markdown theme={myTheme}>{source}</Markdown>
-```
+  if (isLoading) return <div>Loading…</div>
+  if (error) return <div>Error: {error.message}</div>
 
-### CSS custom properties
-
-All theme values are exposed as CSS custom properties. You can override them globally:
-
-```css
-.mdkit-root {
-  --mdkit-color-bg: #ffffff;
-  --mdkit-color-text: #1a1a1a;
-  --mdkit-color-primary: #0070f3;
-  --mdkit-color-code-bg: #f5f5f5;
-  --mdkit-color-border: #e5e5e5;
-  --mdkit-font-body: 'Inter', sans-serif;
-  --mdkit-font-mono: 'Fira Code', monospace;
-  --mdkit-font-size-base: 1rem;
-  --mdkit-line-height: 1.7;
-  --mdkit-radius: 0.375rem;
+  return <article>{content}</article>
 }
 ```
 
-Import pre-built theme stylesheets:
-
-```ts
-import 'react-markdown-ziri/styles/base.css'    // required base styles
-import 'react-markdown-ziri/styles/light.css'   // light theme variables
-import 'react-markdown-ziri/styles/dark.css'    // dark theme variables
-```
+| Field | Type | Description |
+|-------|------|-------------|
+| `content` | `ReactNode` | Rendered React nodes |
+| `frontmatter` | `Record<string, unknown> \| null` | Parsed frontmatter data |
+| `toc` | `TOCItem[]` | Table of contents items |
+| `isLoading` | `boolean` | `true` while processing |
+| `error` | `Error \| null` | Processing error, if any |
 
 ---
 
@@ -327,40 +430,29 @@ import { Markdown } from 'react-markdown-ziri'
 import type { MarkdownComponents, HeadingProps, LinkProps } from 'react-markdown-ziri'
 
 const components: Partial<MarkdownComponents> = {
-  // Custom heading with your design system
-  h1: ({ children, id }) => (
+  h1: ({ children, id }: HeadingProps) => (
     <h1 id={id} className="text-4xl font-bold tracking-tight">
       {children}
     </h1>
   ),
 
-  // Open external links in new tab with icon
-  a: ({ href, children }) => (
-    <a href={href} target={href?.startsWith('http') ? '_blank' : undefined}>
+  a: ({ href, children }: LinkProps) => (
+    <a href={href} target={href?.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">
       {children}
     </a>
-  ),
-
-  // Custom code block
-  pre: ({ children, 'data-language': lang }) => (
-    <div className={`code-block lang-${lang}`}>
-      {children}
-    </div>
   ),
 }
 
 <Markdown components={components}>{source}</Markdown>
 ```
 
-#### Available component keys
-
-`h1` `h2` `h3` `h4` `h5` `h6` `p` `a` `img` `pre` `code` `table` `thead` `tbody` `tr` `th` `td` `blockquote` `ul` `ol` `li` `hr` `strong` `em` `del`
+Available component keys: `h1` `h2` `h3` `h4` `h5` `h6` `p` `a` `img` `pre` `code` `table` `thead` `tbody` `tr` `th` `td` `blockquote` `ul` `ol` `li` `hr` `strong` `em` `del`
 
 ---
 
 ## React Server Components (Next.js App Router)
 
-Use `MarkdownServer` for zero client-side JavaScript. It renders markdown entirely on the server.
+Use `MarkdownServer` for zero client-side JavaScript. Renders markdown entirely on the server.
 
 ```tsx
 // app/blog/[slug]/page.tsx
@@ -371,9 +463,7 @@ export default async function BlogPost({ params }: { params: { slug: string } })
   const source = await fetchMarkdown(params.slug)
 
   return (
-    <MarkdownServer
-      options={{ gfm: true, highlight: true, headingAnchors: true }}
-    >
+    <MarkdownServer options={{ gfm: true, highlight: true, headingAnchors: true }}>
       {source}
     </MarkdownServer>
   )
@@ -382,10 +472,9 @@ export default async function BlogPost({ params }: { params: { slug: string } })
 
 ### `serializeMarkdown` (SSG / `getStaticProps`)
 
-Pre-process markdown at build time and pass the result to a client component.
+Pre-process markdown at build time and pass the serialized result to a client component.
 
 ```tsx
-// For Next.js Pages Router or any SSG scenario
 import { serializeMarkdown } from 'react-markdown-ziri/server'
 
 export async function getStaticProps() {
@@ -431,7 +520,7 @@ tags: [react, markdown]
 Content starts here...
 ```
 
-The `onFrontmatter` callback receives `{ title: 'My Post', author: 'Alice', published: true, tags: ['react', 'markdown'] }`.
+`onFrontmatter` receives `{ title: 'My Post', author: 'Alice', published: true, tags: ['react', 'markdown'] }`.
 
 ---
 
@@ -442,9 +531,9 @@ Requires `katex` peer dependency.
 ```tsx
 <Markdown options={{ math: true }}>
   {`
-Inline math: $E = mc^2$
+Inline: $E = mc^2$
 
-Block math:
+Block:
 
 $$
 \\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}
@@ -474,9 +563,56 @@ graph TD
 
 ---
 
+## Syntax Highlighting
+
+Powered by [Shiki](https://shiki.matsu.io/). The shiki theme is automatically derived from the `theme` prop:
+
+| `theme` prop | Shiki theme used |
+|---|---|
+| `"light"` | `github-light` |
+| `"dark"` | `github-dark` |
+| `"github"` | `github-light` |
+| `"dracula"` | `dracula` |
+| `"system"` | `github-light` (OS-adaptive via CSS) |
+| Custom `ThemeConfig` | Value of `ThemeConfig.code` |
+
+Override the shiki theme explicitly:
+
+```tsx
+<Markdown
+  theme="dark"
+  options={{
+    highlight: {
+      theme: 'one-dark-pro',          // single theme
+      // or dual themes:
+      themes: { light: 'github-light', dark: 'github-dark' },
+    },
+  }}
+>
+  {source}
+</Markdown>
+```
+
+### Copy button
+
+Code blocks include a built-in copy-to-clipboard button. Style it with:
+
+```css
+.mdkit-copy-btn { /* idle state */ }
+.mdkit-copy-btn--copied { /* after copy */ }
+```
+
+### Line numbers
+
+```tsx
+<Markdown options={{ lineNumbers: true }}>{source}</Markdown>
+```
+
+---
+
 ## Custom Plugins
 
-Extend the pipeline with your own remark or rehype plugins.
+Extend the unified pipeline with remark or rehype plugins.
 
 ```tsx
 import remarkGemoji from 'remark-gemoji'
@@ -488,52 +624,32 @@ const plugins = [
   createPlugin('rehype', rehypeExternalLinks, { target: '_blank' }),
 ]
 
-<Markdown options={{ plugins }}>
-  {source}
-</Markdown>
+<Markdown options={{ plugins }}>{source}</Markdown>
 ```
 
 ---
 
-## Syntax Highlighting
+## Next.js Setup
 
-Uses [Shiki](https://shiki.matsu.io/) for accurate, server-rendered syntax highlighting. No client-side runtime.
+### App Router (`app/`)
 
-```tsx
-<Markdown options={{
-  highlight: {
-    theme: 'github-light',
-    darkTheme: 'github-dark',
-  }
-}}>
-  {source}
-</Markdown>
-```
+No special setup needed. Use `MarkdownServer` from `react-markdown-ziri/server` for server components.
 
-The dark theme is automatically applied when the user's system preference is `prefers-color-scheme: dark` or when the `data-theme="dark"` attribute is set on a parent element.
+### Pages Router (`pages/`)
 
-### Copy button
+If you encounter ESM issues, add to `next.config.js`:
 
-Code blocks include a built-in copy button. Style it with:
-
-```css
-.mdkit-copy-button { /* ... */ }
-.mdkit-copy-button--copied { /* ... */ }
-```
-
-### Line numbers
-
-```tsx
-<Markdown options={{ highlight: true, lineNumbers: true }}>
-  {source}
-</Markdown>
+```js
+module.exports = {
+  transpilePackages: ['react-markdown-ziri'],
+}
 ```
 
 ---
 
 ## TypeScript
 
-All types are exported from the main entry point.
+All public types are exported from the main entry point:
 
 ```ts
 import type {
@@ -543,31 +659,25 @@ import type {
   TOCItem,
   ThemeName,
   ThemeConfig,
+  ThemeColors,
   HeadingProps,
   LinkProps,
   ImageProps,
-  CodeBlockProps,
+  CodeProps,
+  PreProps,
+  ListItemProps,
+  TableProps,
+  HighlightOptions,
+  HeadingAnchorOptions,
+  TOCOptions,
+  MathOptions,
+  MermaidOptions,
+  SanitizeOptions,
+  ExternalLinkOptions,
+  ImageOptions,
   MarkdownPlugin,
+  SerializedMarkdown,
 } from 'react-markdown-ziri'
-```
-
----
-
-## Next.js Setup
-
-### App Router (`app/`)
-
-No special setup needed — just import and use. For server-side rendering use `MarkdownServer` from `react-markdown-ziri/server`.
-
-### Pages Router (`pages/`)
-
-Add `react-markdown-ziri` to `next.config.js` transpile list if needed (for ESM packages):
-
-```js
-// next.config.js
-module.exports = {
-  transpilePackages: ['react-markdown-ziri'],
-}
 ```
 
 ---
