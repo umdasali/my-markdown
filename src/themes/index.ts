@@ -1,14 +1,22 @@
-export { lightTheme, darkTheme, githubTheme, draculaTheme } from './default'
+export { lightTheme, darkTheme, githubTheme, draculaTheme, lightGreenTheme, lightOrangeTheme, lightPinkTheme, lightPurpleTheme, darkGreenTheme, darkOrangeTheme, darkPinkTheme, darkPurpleTheme } from './default'
 export type { ThemeConfig, ThemeColors, ThemeName } from '../core/types'
 
 import type { ThemeName, ThemeConfig } from '../core/types'
-import { lightTheme, darkTheme, githubTheme, draculaTheme } from './default'
+import { lightTheme, darkTheme, githubTheme, draculaTheme, lightGreenTheme, lightOrangeTheme, lightPinkTheme, lightPurpleTheme, darkGreenTheme, darkOrangeTheme, darkPinkTheme, darkPurpleTheme } from './default'
 
 const THEMES: Record<Exclude<ThemeName, 'system'>, ThemeConfig> = {
   light: lightTheme,
   dark: darkTheme,
   github: githubTheme,
   dracula: draculaTheme,
+  'light-green': lightGreenTheme,
+  'light-orange': lightOrangeTheme,
+  'light-pink': lightPinkTheme,
+  'light-purple': lightPurpleTheme,
+  'dark-green': darkGreenTheme,
+  'dark-orange': darkOrangeTheme,
+  'dark-pink': darkPinkTheme,
+  'dark-purple': darkPurpleTheme,
 }
 
 export function getTheme(name: ThemeName | ThemeConfig): ThemeConfig {

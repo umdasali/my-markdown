@@ -30,20 +30,20 @@
 /* System dark mode (theme="system" default) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --mdkit-text: #f3f4f6;
-    --mdkit-text-muted: #9ca3af;
-    --mdkit-bg: #111827;
-    --mdkit-bg-secondary: #1f2937;
-    --mdkit-border: #374151;
-    --mdkit-link: #60a5fa;
-    --mdkit-link-hover: #93c5fd;
-    --mdkit-code-bg: #1f2937;
-    --mdkit-code-text: #f3f4f6;
-    --mdkit-blockquote-border: #4b5563;
-    --mdkit-blockquote-bg: #1f2937;
-    --mdkit-table-header-bg: #1f2937;
-    --mdkit-table-row-hover: #1f2937;
-    --mdkit-heading-anchor: #6b7280;
+    --mdkit-text: #d4d4d4;
+    --mdkit-text-muted: #858585;
+    --mdkit-bg: #1e1e1e;
+    --mdkit-bg-secondary: #252526;
+    --mdkit-border: #3e3e42;
+    --mdkit-link: #4ec9b0;
+    --mdkit-link-hover: #9cdcfe;
+    --mdkit-code-bg: #141414;
+    --mdkit-code-text: #d4d4d4;
+    --mdkit-blockquote-border: #569cd6;
+    --mdkit-blockquote-bg: #252526;
+    --mdkit-table-header-bg: #2d2d30;
+    --mdkit-table-row-hover: #2a2d2e;
+    --mdkit-heading-anchor: #6e6e6e;
   }
 }
 

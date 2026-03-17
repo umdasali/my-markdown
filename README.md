@@ -9,7 +9,7 @@ A feature-rich, production-ready Markdown renderer for React and Next.js — bui
 - **Diagrams** — Mermaid diagram support
 - **Table of Contents** — auto-generated with scrollspy active-item tracking
 - **Frontmatter** — YAML frontmatter extraction
-- **Themes** — built-in `light` / `dark` / `github` / `dracula` + custom theme support via CSS custom properties
+- **Themes** — 12 built-in themes (`light`, `dark`, `github`, `dracula`, 4 light variants, 4 dark variants) + custom theme support via CSS custom properties
 - **React Server Components** — async `MarkdownServer` for Next.js App Router
 - **Fully typed** — strict TypeScript throughout
 
@@ -145,7 +145,7 @@ All options are optional. Pass via the `options` prop.
 }
 ```
 
-When you pass `theme="dark"` (or any built-in theme) to `<Markdown>`, the code block automatically picks the matching Shiki theme (`github-dark` for dark, `github-light` for light/github, `dracula` for dracula). You only need `HighlightOptions.theme` to override this.
+When you pass any built-in theme to `<Markdown>`, the code block automatically picks the matching Shiki theme (e.g. `one-dark-pro` for `dark`, `github-light` for `light`/`github`, `vitesse-dark` for `dark-green`). You only need `HighlightOptions.theme` to override this.
 
 #### `HeadingAnchorOptions`
 
@@ -240,11 +240,24 @@ import { MarkdownProvider, Markdown } from 'react-markdown-ziri'
 Pass a theme name to `<Markdown>` or `<MarkdownProvider>`:
 
 ```tsx
+// Base themes
 <Markdown theme="light">{source}</Markdown>    // default
 <Markdown theme="dark">{source}</Markdown>
 <Markdown theme="github">{source}</Markdown>
 <Markdown theme="dracula">{source}</Markdown>
 <Markdown theme="system">{source}</Markdown>   // follows OS preference via CSS media query
+
+// Light variants
+<Markdown theme="light-green">{source}</Markdown>   // sage/mint
+<Markdown theme="light-orange">{source}</Markdown>  // peach/warm
+<Markdown theme="light-pink">{source}</Markdown>    // blush/rose
+<Markdown theme="light-purple">{source}</Markdown>  // lavender
+
+// Dark variants
+<Markdown theme="dark-green">{source}</Markdown>    // forest/terminal
+<Markdown theme="dark-orange">{source}</Markdown>   // ember/sunset
+<Markdown theme="dark-pink">{source}</Markdown>     // rose/sakura
+<Markdown theme="dark-purple">{source}</Markdown>   // midnight/nebula
 ```
 
 Each theme also sets the matching Shiki theme for code blocks automatically.
@@ -570,9 +583,17 @@ Powered by [Shiki](https://shiki.matsu.io/). The shiki theme is automatically de
 | `theme` prop | Shiki theme used |
 |---|---|
 | `"light"` | `github-light` |
-| `"dark"` | `github-dark` |
+| `"dark"` | `one-dark-pro` |
 | `"github"` | `github-light` |
 | `"dracula"` | `dracula` |
+| `"light-green"` | `vitesse-light` |
+| `"light-orange"` | `catppuccin-latte` |
+| `"light-pink"` | `catppuccin-latte` |
+| `"light-purple"` | `vitesse-light` |
+| `"dark-green"` | `vitesse-dark` |
+| `"dark-orange"` | `one-dark-pro` |
+| `"dark-pink"` | `catppuccin-mocha` |
+| `"dark-purple"` | `catppuccin-mocha` |
 | `"system"` | `github-light` (OS-adaptive via CSS) |
 | Custom `ThemeConfig` | Value of `ThemeConfig.code` |
 

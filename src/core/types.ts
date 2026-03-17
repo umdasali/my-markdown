@@ -198,7 +198,7 @@ export interface TOCItem {
 // Theme types
 // ---------------------------------------------------------------------------
 
-export type ThemeName = 'light' | 'dark' | 'github' | 'dracula' | 'system'
+export type ThemeName = 'light' | 'dark' | 'github' | 'dracula' | 'light-green' | 'light-orange' | 'light-pink' | 'light-purple' | 'dark-green' | 'dark-orange' | 'dark-pink' | 'dark-purple' | 'system'
 
 export interface ThemeColors {
   text: string
